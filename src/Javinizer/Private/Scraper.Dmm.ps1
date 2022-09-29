@@ -152,7 +152,7 @@ function Get-DmmMaker {
 
     process {
         try {
-            $maker = ($Webrequest.Content | Select-String -Pattern '<a href="(\/digital\/videoa\/|(?:\/en)?\/mono\/dvd\/)-\/list\/=\/article=maker\/id=\d*\/"[^>]*?>(.*)<\/a>').Matches.Groups[2].Value
+            $maker = ($Webrequest.Content | Select-String -Pattern '<a href="(\/digital\/videoa\/|\/digital\/videoc\/|(?:\/en)?\/mono\/dvd\/)-\/list\/=\/article=maker\/id=\d*\/"[^>]*?>(.*)<\/a>').Matches.Groups[2].Value
         } catch {
             return
         }
@@ -168,7 +168,7 @@ function Get-DmmLabel {
 
     process {
         try {
-            $label = ($Webrequest.Content | Select-String -Pattern '<a href="(\/digital\/videoa\/|(?:\/en)?\/mono\/dvd\/)-\/list\/=\/article=label\/id=\d*\/"[^>]*?>(.*)<\/a>').Matches.Groups[2].Value
+            $label = ($Webrequest.Content | Select-String -Pattern '<a href="(\/digital\/videoa\/|\/digital\/videoc\/|(?:\/en)?\/mono\/dvd\/)-\/list\/=\/article=label\/id=\d*\/"[^>]*?>(.*)<\/a>').Matches.Groups[2].Value
         } catch {
             return
         }
@@ -184,7 +184,7 @@ function Get-DmmSeries {
 
     process {
         try {
-            $series = ($Webrequest.Content | Select-String -Pattern '<a href="(\/digital\/videoa\/|(?:\/en)?\/mono\/dvd\/)-\/list\/=\/article=series\/id=\d*\/"[^>]*?>(.*)<\/a><\/td>').Matches.Groups[2].Value
+            $series = ($Webrequest.Content | Select-String -Pattern '<a href="(\/digital\/videoa\/|\/digital\/videoc\/|(?:\/en)?\/mono\/dvd\/)-\/list\/=\/article=series\/id=\d*\/"[^>]*?>(.*)<\/a><\/td>').Matches.Groups[2].Value
         } catch {
             return
         }
@@ -262,6 +262,14 @@ function Get-DmmActress {
 
     process {
         $movieActressObject = @()
+        if ($Webrequest.Content -match '\/digital\/videoc\/-\/detail\/ajax-performer\/') {
+            try {
+                $fullActressUrl = "https://www.dmm.co.jp" + ($Webrequest.Content | Select-String -Pattern '\/digital\/videoc\/-\/detail\/ajax-performer\/=\/data=.*\/').Matches.Groups[0].Value
+                $movieActress = ((Invoke-WebRequest -Uri $fullActressUrl -Verbose:$false).Content | Select-String -Pattern '\/article=actress\/id=(\d*)\/">(.*)<\/a>' -AllMatches).Matches
+            } catch {
+                return
+            }
+        }
         if ($Webrequest.Content -match '\/digital\/videoa\/-\/detail\/ajax-performer\/') {
             try {
                 $fullActressUrl = "https://www.dmm.co.jp" + ($Webrequest.Content | Select-String -Pattern '\/digital\/videoa\/-\/detail\/ajax-performer\/=\/data=.*\/').Matches.Groups[0].Value
