@@ -1093,7 +1093,7 @@ function Javinizer {
                                 $mediaInfo = Get-JVMediaInfo -Path $movie.FullName
                             }
 
-                            $javData = Get-JVData -Id $movie.Id -Settings $Settings -UncensorCsvPath $uncensorCsvPath -Strict:$Strict -Session:$CfSession -JavdbSession:$Settings.'javdb.cookie.session'
+                            $javData = Get-JVData -Id $movie.Id -Cid $movie.BaseName  -Settings $Settings -UncensorCsvPath $uncensorCsvPath -Strict:$Strict -Session:$CfSession -JavdbSession:$Settings.'javdb.cookie.session'
                             $javAggregatedData = $javData | Get-JVAggregatedData -Settings $Settings -FileName $movie.BaseName -MediaInfo $mediaInfo | Test-JVData -RequiredFields $Settings.'sort.metadata.requiredfield'
 
                             if ($PSBoundParameters.ContainsKey('IsWeb') -or $PSBoundParameters.ContainsKey('Search')) {
