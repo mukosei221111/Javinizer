@@ -4,6 +4,9 @@ function Get-JVData {
         [Parameter(Position = 0, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Id')]
         [String]$Id,
 
+        [Parameter(Position = 1, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Id')]
+        [String]$Cid,
+
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'Id')]
         [Alias('scraper.movie.r18')]
         [Boolean]$R18,
@@ -181,7 +184,7 @@ function Get-JVData {
                     Start-ThreadJob -Name "jvdata-Dmm" -ThrottleLimit $throttleLimit -ScriptBlock {
                         Import-Module $using:jvModulePath
                         if (!($using:DmmUrl)) {
-                            $jvDmmUrl = Get-DmmUrl -Id $using:Id -Strict:$using:Strict -AllResults:$using:Allresults
+                            $jvDmmUrl = Get-DmmUrl -Id $using:Cid -Strict:$using:Strict -AllResults:$using:Allresults
                         }
                         if ($using:DmmUrl) {
                             $using:DmmUrl | Get-DmmData -ScrapeActress:$using:DmmScrapeActress
@@ -196,7 +199,7 @@ function Get-JVData {
                     Start-ThreadJob -Name "jvdata-DmmJa" -ThrottleLimit $throttleLimit -ScriptBlock {
                         Import-Module $using:jvModulePath
                         if (!($using:DmmJaUrl)) {
-                            $jvDmmUrl = Get-DmmUrl -Id $using:Id -Strict:$using:Strict -AllResults:$using:Allresults
+                            $jvDmmUrl = Get-DmmUrl -Id $using:Cid -Strict:$using:Strict -AllResults:$using:Allresults
                         }
                         if ($using:DmmJaUrl) {
                             $using:DmmJaUrl | Get-DmmData -ScrapeActress:$using:DmmScrapeActress
